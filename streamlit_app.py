@@ -95,6 +95,6 @@ if len(st.session_state["messages"]) > 2:
             st.session_state["messages"] = remove_duplicates(st.session_state["messages"])
             st.session_state["uuid"] = str(uuid.uuid4())
             st.markdown(st.session_state["uuid"])
-            st.markdown(st.session_state["messages"])
+            st.markdown(st.session_state["messages"][1:])
             st.success("Data saved!")
 
