@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 #from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 #openai.api_key = os.environ.get("OPENAI_API_KEY")
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
