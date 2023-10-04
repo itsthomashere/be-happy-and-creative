@@ -19,6 +19,16 @@ def update_session_state(role: str, content: str) -> None:
         "role": role, 
         "content": content})
 
+def remove_duplicates(messages: list[dict[str, str]]) -> list[dict[str, str]]:
+    seen = set()
+    unique_messages = []
+    for message in messages:
+        # Create a unique identifier for each message based on its content and role
+        identifier = (message["role"], message["content"])
+        if identifier not in seen:
+            seen.add(identifier)
+            unique_messages.append(message)
+    return unique_messages
 
 def hide_st_style() -> None:
     hide_st_style = """
@@ -80,7 +90,9 @@ if user_message:
 if len(st.session_state["messages"]) > 2:
     with st.form("my_form"):
         submitted = st.form_submit_button("Save Data")
+        st.write("Don't press this right away! Only when you're happy with your idea!")
         if submitted:
+            st.session_state["messages"] = remove_duplicates(st.session_state["messages"])
             st.session_state["uuid"] = str(uuid.uuid4())
             st.markdown(st.session_state["uuid"])
             st.markdown(st.session_state["messages"])
