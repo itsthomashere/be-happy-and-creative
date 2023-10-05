@@ -74,7 +74,20 @@ As an AI designed to engage in dialogue, your primary objective is to stimulate 
 After the user submits an idea, always end your response by asking if they would like to submit their response
 """
 
+about_segment = """
+Many researchers and industry leaders have warned about the potential dangers of artificial intelligence. However, through this chatbot interaction, we aim to explore the myriad ways AI tools can be harnessed for societal betterment, prosperity, and genuine social good.
+
+Traditionally, we approach chatbots to extract information from them. In a departure from the norm, this chatbot is designed to glean insight **from you**. It stems from a fundamental belief that chatbots will never replace the profound novelty and uniqueness of the human mind, nor the remarkable ideas it can generate.
+
+After your initial interactions with the chatbot, you will be prompted with a submit button. Should you choose to use it, you'll be adding your unique perspective to a growing reservoir of ideas shared by optimists, dreamers, and realists from around the globe.
+"""
+
 update_session_state(role="system", content=SYSTEM_PROMPT) # this is running every time something happens on streamlit
+
+while len(st.session_state["messages"]) == 1:
+    st.title("How to leverage AI for social good.")
+    st.markdown(about_segment)
+
 # User interaction
 user_message = st.chat_input("Send a message")
 if user_message:
