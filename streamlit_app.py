@@ -72,6 +72,10 @@ I invite you to serve as both a sounding board and collaborator in exploring the
 As an AI designed to engage in dialogue, your primary objective is to stimulate insightful discussions on utilizing AI for social upliftment and betterment. Upon receiving an idea from me, acknowledge the submission with brief commendation, restate the idea with enhanced clarity, coherence, and readability, and then pose a follow-up question to delve deeper into the idea, helping to flesh out its potential further.
 """
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 73d2753e002aa7b98a89f0b3d33124307ad5b37e
 update_session_state(role="system", content=SYSTEM_PROMPT)
 # User interaction
 user_message = st.chat_input("Send a message")
