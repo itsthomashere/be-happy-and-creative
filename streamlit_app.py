@@ -58,8 +58,8 @@ def create_chat_completion(model: str, messages: list[dict[str, str]]) -> None:
 setup_session_state()
 hide_st_style()
 
-user_icon = "🟡"
-assistant_icon = "🟣"
+user_icon = "./icons/user_icon.png"
+assistant_icon = "./icons/assistant_icon.png"
 
 for message in st.session_state.messages:
     if message["role"] != "system":
