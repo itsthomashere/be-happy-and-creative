@@ -84,7 +84,7 @@ After your initial interactions with the chatbot, you will be prompted with a su
 
 update_session_state(role="system", content=SYSTEM_PROMPT) # this is running every time something happens on streamlit
 
-while len(st.session_state["messages"]) == 1:
+if len(st.session_state["messages"]) == 1:
     st.title("How to leverage AI for social good.")
     st.markdown(about_segment)
 
