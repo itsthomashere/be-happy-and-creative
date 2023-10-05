@@ -5,7 +5,6 @@ import uuid
 from datetime import datetime
 #from dotenv import load_dotenv
 from sqlalchemy import text
-import session_state as ss
 
 def get_connection():
     return st.experimental_connection("digitalocean", type="sql")
@@ -122,11 +121,12 @@ if len(st.session_state.messages) > 4:
 
         with conn.session as s:
             create_table_if_not_exists(s, 'messages')
-            for message in ss.session_state["messages"]:
+            for message in st.session_state["messages"]:
                 add_message_to_db(s, message["role"], message["content"])
             s.commit()
 
+        st.success("Data saved!")
+
         # Query and display the data you inserted
-        messages = conn.query('select * from messages')
-        st.dataframe(messages)
-            st.success("Data saved!")
+messages = conn.query('select * from messages')
+st.dataframe(messages)
