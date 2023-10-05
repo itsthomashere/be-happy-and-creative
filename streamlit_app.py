@@ -86,16 +86,13 @@ if user_message:
 
     st.session_state["messages"].append({"role": "assistant", "content": response})
 
-
-    " --- "
-if len(st.session_state["messages"]) > 2:
-    with st.form("my_form"):
-        submitted = st.form_submit_button("Save Data")
-        st.write("Don't press this right away! Only when you're happy with your idea!")
-        if submitted:
-            st.session_state["messages"] = remove_duplicates(st.session_state["messages"])
-            st.session_state["uuid"] = str(uuid.uuid4())
-            st.markdown(st.session_state["uuid"])
-            st.markdown(st.session_state["messages"][1:])
-            st.success("Data saved!")
-
+    # Check for 'submit' in user_message and length of messages
+    if 'submit' in user_message.lower() and len(st.session_state["messages"]) > 2:
+        with st.form(key='my_form'):
+            submitted = st.form_submit_button('Submit')
+            if submitted:
+                st.session_state["messages"] = remove_duplicates(st.session_state["messages"])
+                st.session_state["uuid"] = str(uuid.uuid4())
+                st.markdown(st.session_state["uuid"])
+                st.markdown(st.session_state["messages"][1:])
+                st.success("Data saved!")
