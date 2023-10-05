@@ -4,9 +4,21 @@ import openai
 import uuid
 from datetime import datetime
 #from dotenv import load_dotenv
+from sqlalchemy import text
+import session_state as ss
 
-#load_dotenv()
-#openai.api_key = os.environ.get("OPENAI_API_KEY")
+def get_connection():
+    return st.experimental_connection("digitalocean", type="sql")
+
+def create_table_if_not_exists(session, table_name):
+    session.execute(text(f'CREATE TABLE IF NOT EXISTS {table_name} (role TEXT, content TEXT);'))
+
+def add_message_to_db(session, role, content):
+    session.execute(
+        text('INSERT INTO messages (role, content) VALUES (:role, :content);'),
+        params=dict(role=role, content=content)
+    )
+
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def setup_session_state() -> None:
@@ -92,22 +104,29 @@ if len(st.session_state["messages"]) == 1:
 user_message = st.chat_input("Send a message")
 if user_message:
 
-    # Check for 'submit' in user_message and length of messages
-    if 'submit' in user_message.lower() and len(st.session_state["messages"]) > 2:
-        with st.form(key='my_form'):
-            submitted = st.form_submit_button('Submit')
-            if submitted:
-                st.session_state["messages"] = remove_duplicates(st.session_state["messages"])
-                st.session_state["uuid"] = str(uuid.uuid4())
-                st.markdown(st.session_state["uuid"])
-                st.markdown(st.session_state["messages"][:])
-                st.success("Data saved!")
-
     update_session_state(role="user", content=user_message)
     with st.chat_message(name="user", avatar=user_icon):
         st.write(user_message)
     
-    response = create_chat_completion(model="gpt-4", messages=st.session_state["messages"])
+    if 'submit' not in user_message.lower():
+        response = create_chat_completion(model="gpt-4", messages=st.session_state["messages"])
 
     st.session_state["messages"].append({"role": "assistant", "content": response})
 
+
+    " --- "
+if len(st.session_state.messages) > 4:
+    submitted = st.form_submit_button("Save Data")
+    if submitted:
+        conn = get_connection()
+
+        with conn.session as s:
+            create_table_if_not_exists(s, 'messages')
+            for message in ss.session_state["messages"]:
+                add_message_to_db(s, message["role"], message["content"])
+            s.commit()
+
+        # Query and display the data you inserted
+        messages = conn.query('select * from messages')
+        st.dataframe(messages)
+            st.success("Data saved!")
