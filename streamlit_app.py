@@ -10,8 +10,10 @@ from datetime import datetime
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 def setup_session_state() -> None:
+    global SYSTEM_PROMPT
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
+        update_session_state(role="system", content="SYSTEM_PROMPT")
 
 def update_session_state(role: str, content: str) -> None:
     """Append a message with role and content to st.session_state.messages."""
@@ -42,7 +44,7 @@ def hide_st_style() -> None:
 
 def create_chat_completion(model: str, messages: list[dict[str, str]]) -> None:
     """Generate and display chat completion using OpenAI and Streamlit."""
-    with st.chat_message(name="assistant", avatar="🤔"):
+    with st.chat_message(name="assistant", avatar=assistant_icon):
         message_placeholder = st.empty()
         full_response = ""
         for response in openai.ChatCompletion.create(
@@ -72,7 +74,7 @@ I invite you to serve as both a sounding board and collaborator in exploring the
 As an AI designed to engage in dialogue, your primary objective is to stimulate insightful discussions on utilizing AI for social upliftment and betterment. Upon receiving an idea from me, acknowledge the submission with brief commendation, restate the idea with enhanced clarity, coherence, and readability, and then pose a follow-up question to delve deeper into the idea, helping to flesh out its potential further.
 """
 
-update_session_state(role="system", content=SYSTEM_PROMPT)
+#update_session_state(role="system", content=SYSTEM_PROMPT) # this is running every time something happens on streamlit
 # User interaction
 user_message = st.chat_input("Send a message")
 if user_message:
